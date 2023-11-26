@@ -7,7 +7,7 @@ edition = "2021"
 rust-version = "1.64.0"
 repository = "https://github.com/parasyte/pixels"
 readme = "README.md"
-keywords = ["pixels", "2D", "GPU", "framebuffer"]
+keywords = ["pixels", "TwoD", "GPU", "framebuffer"]
 categories = ["graphics", "rendering"]
 license = "MIT"
 include = [
@@ -34,7 +34,7 @@ pollster = "0.3"
 
 [dev-dependencies]
 pixels-mocks = { path = "internals/pixels-mocks" }
-winit = "0.28"
+winit = "0.29.4"
 
 [workspace]
 members = [

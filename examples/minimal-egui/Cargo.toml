@@ -10,12 +10,30 @@ optimize = ["log/release_max_level_warn"]
 default = ["optimize"]
 
 [dependencies]
-egui = "0.24"
-egui-wgpu = "0.24"
-egui-winit = { version = "0.24", default-features = false, features = ["links"] }
+#egui = "0.24"
+#egui-wgpu = "0.24"
+#egui-winit = { version = "0.24", default-features = false, features = ["links"]
 env_logger = "0.10"
 error-iter = "0.4"
 log = "0.4"
 pixels = { path = "../.." }
-winit = "0.28"
-winit_input_helper = "0.14"
+winit = "0.29.4"
+winit_input_helper = "0.15.1"
+
+[dependencies.egui]
+git = "https://github.com/dbalsom/egui_martypc.git"
+branch = "0_24_winit_0_29"
+
+[dependencies.egui-wgpu]
+git = "https://github.com/dbalsom/egui_martypc.git"
+branch = "0_24_winit_0_29"
+
+[dependencies.egui-winit]
+git = "https://github.com/dbalsom/egui_martypc.git"
+branch = "0_24_winit_0_29"
+features = ["links"]
+
+[dependencies.egui_extras]
+git = "https://github.com/dbalsom/egui_martypc.git"
+branch = "0_24_winit_0_29"
+features = ["all_loaders"]
