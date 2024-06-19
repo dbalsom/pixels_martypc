@@ -34,7 +34,7 @@
 pub use crate::builder::{check_texture_size, PixelsBuilder};
 pub use crate::renderers::ScalingRenderer;
 pub use raw_window_handle;
-use raw_window_handle::{HasRawDisplayHandle, HasRawWindowHandle};
+use raw_window_handle::{HasDisplayHandle, HasRawDisplayHandle, HasRawWindowHandle, HasWindowHandle};
 use thiserror::Error;
 pub use wgpu;
 
@@ -67,7 +67,7 @@ pub struct PixelsContext {
     /// The `Queue` provides access to the GPU command queue.
     pub queue: wgpu::Queue,
 
-    surface: wgpu::Surface,
+    surface: wgpu::Surface<'static>,
 
     /// This is the texture that your raw data is copied to by [`Pixels::render`] or
     /// [`Pixels::render_with`].
@@ -213,7 +213,7 @@ impl Pixels {
     ///
     /// Panics when `width` or `height` are 0.
     #[cfg(not(target_arch = "wasm32"))]
-    pub fn new<W: HasRawWindowHandle + HasRawDisplayHandle>(
+    pub fn new<W: HasWindowHandle + HasDisplayHandle>(
         width: u32,
         height: u32,
         surface_texture: SurfaceTexture<'_, W>,
@@ -244,7 +244,7 @@ impl Pixels {
     /// # Panics
     ///
     /// Panics when `width` or `height` are 0.
-    pub async fn new_async<W: HasRawWindowHandle + HasRawDisplayHandle>(
+    pub async fn new_async<W: HasWindowHandle + HasDisplayHandle>(
         width: u32,
         height: u32,
         surface_texture: SurfaceTexture<'_, W>,
@@ -558,6 +558,7 @@ impl Pixels {
                 present_mode: self.present_mode,
                 alpha_mode: self.alpha_mode,
                 view_formats: vec![],
+                desired_maximum_frame_latency: 2,
             },
         );
     }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="EMPTY_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/examples" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/conway/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/custom-shader/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/imgui-winit/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/invaders/simple-invaders/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/invaders/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/minimal-egui/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/minimal-fltk/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/minimal-tao/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/minimal-web/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/minimal-winit-android/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/minimal-winit/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/raqote-winit/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/tiny-skia-winit/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/internals/pixels-mocks/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/run-wasm/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
