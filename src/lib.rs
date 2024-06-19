@@ -34,7 +34,7 @@
 pub use crate::builder::{check_texture_size, PixelsBuilder};
 pub use crate::renderers::ScalingRenderer;
 pub use raw_window_handle;
-use raw_window_handle::{HasRawDisplayHandle, HasRawWindowHandle};
+use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
 use thiserror::Error;
 pub use wgpu;
 
@@ -43,7 +43,7 @@ mod renderers;
 
 /// A logical texture for a window surface.
 #[derive(Debug)]
-pub struct SurfaceTexture<'win, W: HasRawWindowHandle + HasRawDisplayHandle> {
+pub struct SurfaceTexture<'win, W: HasWindowHandle + HasDisplayHandle> {
     window: &'win W,
     size: SurfaceSize,
 }
@@ -60,14 +60,14 @@ struct SurfaceSize {
 /// A reference to this struct is given to the `render_function` closure when using
 /// [`Pixels::render_with`].
 #[derive(Debug)]
-pub struct PixelsContext {
+pub struct PixelsContext<'win> {
     /// The `Device` allows creating GPU resources.
     pub device: wgpu::Device,
 
     /// The `Queue` provides access to the GPU command queue.
     pub queue: wgpu::Queue,
 
-    surface: wgpu::Surface,
+    surface: wgpu::Surface<'win>,
 
     /// This is the texture that your raw data is copied to by [`Pixels::render`] or
     /// [`Pixels::render_with`].
@@ -91,8 +91,8 @@ pub struct PixelsContext {
 ///
 /// See [`PixelsBuilder`] for building a customized pixel buffer.
 #[derive(Debug)]
-pub struct Pixels {
-    context: PixelsContext,
+pub struct Pixels<'win> {
+    context: PixelsContext<'win>,
     surface_size: SurfaceSize,
     present_mode: wgpu::PresentMode,
     render_texture_format: wgpu::TextureFormat,
@@ -147,7 +147,7 @@ pub enum TextureError {
     TextureHeight(u32),
 }
 
-impl<'win, W: HasRawWindowHandle + HasRawDisplayHandle> SurfaceTexture<'win, W> {
+impl<'win, W: HasWindowHandle + HasDisplayHandle> SurfaceTexture<'win, W> {
     /// Create a logical texture for a window surface.
     ///
     /// It is recommended (but not required) that the `width` and `height` are equivalent to the
@@ -181,7 +181,7 @@ impl<'win, W: HasRawWindowHandle + HasRawDisplayHandle> SurfaceTexture<'win, W> 
     }
 }
 
-impl Pixels {
+impl<'win> Pixels<'win> {
     /// Create a pixel buffer instance with default options.
     ///
     /// Any ratio differences between the pixel buffer texture size and surface texture size will
@@ -213,10 +213,10 @@ impl Pixels {
     ///
     /// Panics when `width` or `height` are 0.
     #[cfg(not(target_arch = "wasm32"))]
-    pub fn new<W: HasRawWindowHandle + HasRawDisplayHandle>(
+    pub fn new<W: HasWindowHandle + HasDisplayHandle + std::marker::Sync>(
         width: u32,
         height: u32,
-        surface_texture: SurfaceTexture<'_, W>,
+        surface_texture: SurfaceTexture<'win, W>,
     ) -> Result<Self, Error> {
         PixelsBuilder::new(width, height, surface_texture).build()
     }
@@ -244,10 +244,10 @@ impl Pixels {
     /// # Panics
     ///
     /// Panics when `width` or `height` are 0.
-    pub async fn new_async<W: HasRawWindowHandle + HasRawDisplayHandle>(
+    pub async fn new_async<W: HasWindowHandle + HasDisplayHandle + std::marker::Sync>(
         width: u32,
         height: u32,
-        surface_texture: SurfaceTexture<'_, W>,
+        surface_texture: SurfaceTexture<'win, W>,
     ) -> Result<Self, Error> {
         PixelsBuilder::new(width, height, surface_texture)
             .build_async()
@@ -551,6 +551,7 @@ impl Pixels {
         self.context.surface.configure(
             &self.context.device,
             &wgpu::SurfaceConfiguration {
+                desired_maximum_frame_latency: 2,
                 usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
                 format: self.surface_texture_format,
                 width: self.surface_size.width,

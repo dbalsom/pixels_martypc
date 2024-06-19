@@ -57,12 +57,12 @@ fn main() -> Result<(), Error> {
     };
     let mut world = World::new();
 
-    event_loop.run(move |event, window_target| {
+    let res = event_loop.run(|event, elwt| {
         // Handle input events
         if input.update(&event) {
             // Close events
             if input.key_pressed(KeyCode::Escape) || input.close_requested() || input.destroyed() {
-                window_target.exit();
+                elwt.exit();
                 return;
             }
 
@@ -75,7 +75,7 @@ fn main() -> Result<(), Error> {
             if let Some(size) = input.window_resized() {
                 if let Err(err) = pixels.resize_surface(size.width, size.height) {
                     log_error("pixels.resize_surface", err);
-                    window_target.exit();
+                    elwt.exit();
                     return;
                 }
                 framework.resize(size.width, size.height);
@@ -112,20 +112,22 @@ fn main() -> Result<(), Error> {
                         // Basic error handling
                         if let Err(err) = render_result {
                             log_error("pixels.render", err);
-                            window_target.exit();
+                            elwt.exit();
                         }
                     }
                     _ => {}
                 }
                 // Update egui inputs
-                framework.handle_event(&event);
+                framework.handle_event(&window, &event);
             }
 
             _ => (),
         }
-    }).unwrap();
+    });
 
-    Ok(())
+    res.map_err(|e| Error::UserDefined(Box::new(e)))
+
+    //Ok(())
 }
 
 fn log_error<E: std::error::Error + 'static>(method_name: &str, err: E) {
